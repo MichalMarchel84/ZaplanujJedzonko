@@ -51,7 +51,7 @@ public class RecipePlanDao {
     }
 
     public int update(RecipePlan entry){
-        String sql = "UPDATE recipe_plan SET recipe_id = ?, meal_name = ?, display_order = ?, day_name_id = ?, plan_id = ? WHERE id = ?)";
+        String sql = "UPDATE recipe_plan SET recipe_id = ?, meal_name = ?, display_order = ?, day_name_id = ?, plan_id = ? WHERE id = ?";
 
         try (Connection connection = DbUtil.getConnection();
              PreparedStatement insertStm = connection.prepareStatement(sql)) {

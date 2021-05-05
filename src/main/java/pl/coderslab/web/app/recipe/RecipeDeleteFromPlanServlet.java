@@ -1,5 +1,6 @@
 package pl.coderslab.web.app.recipe;
 
+import pl.coderslab.dao.RecipePlanDao;
 import pl.coderslab.model.Meal;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ public class RecipeDeleteFromPlanServlet extends HttpServlet {
         }else if (req.getParameter("confirm").equals("1")) {
 
             int id = Integer.parseInt(req.getParameter("id"));
-            Meal.remove(id);
+            (new RecipePlanDao()).delete(id);
             resp.sendRedirect("/app/plan/details?id=" + req.getParameter("plan") );
         }
     }

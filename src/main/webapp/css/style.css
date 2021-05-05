@@ -539,3 +539,16 @@ margin: 0 auto !important;
 .page-width{
   max-width: 100vw;
 }
+
+/*------------------------------*/
+/*---- Edit plan ----*/
+/*------------------------------*/
+
+.meal-order{
+  width: 3em;
+}
+
+.meal-width{
+  border: 3px solid red;
+  max-width: 500px;
+}

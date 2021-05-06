@@ -10,7 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 public class PlanDao {
 
-    private EntityFactory<Plan> factory = new EntityFactory<>(Plan.class);
+    private EntityFactory<Plan> factory;
+
+    public PlanDao() {
+        try {
+            factory = new EntityFactory<>(Plan.class);
+        }catch (NoSuchMethodException e){
+            e.printStackTrace();
+        }
+    }
 
     public int createPlan(Plan plan){
         String sql = "INSERT INTO plan VALUES (NULL, ?, ?, ?, ?)";

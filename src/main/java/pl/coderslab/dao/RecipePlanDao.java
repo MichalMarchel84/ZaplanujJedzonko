@@ -13,7 +13,15 @@ import java.util.List;
 
 public class RecipePlanDao {
 
-    private EntityFactory<RecipePlan> factory = new EntityFactory<>(RecipePlan.class);
+    private EntityFactory<RecipePlan> factory;
+
+    public RecipePlanDao() {
+        try {
+            factory = new EntityFactory<>(RecipePlan.class);
+        }catch (NoSuchMethodException e){
+            e.printStackTrace();
+        }
+    }
 
     public List<RecipePlan> getForPlan(int id){
         List<RecipePlan> list = new ArrayList<>();

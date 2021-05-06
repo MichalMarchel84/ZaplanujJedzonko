@@ -14,7 +14,15 @@ public class DayNameDao {
 
     private static final String FIND_ALL_BOOKS_QUERY = "SELECT * FROM day_name ORDER BY display_order ASC;";
 
-    private EntityFactory<DayName> factory = new EntityFactory<>(DayName.class);
+    private EntityFactory<DayName> factory;
+
+    public DayNameDao() {
+        try {
+            factory  = new EntityFactory<>(DayName.class);
+        }catch (NoSuchMethodException e){
+            e.printStackTrace();
+        }
+    }
 
     public List<DayName> findAll() {
         List<DayName> dayNames = new ArrayList<>();

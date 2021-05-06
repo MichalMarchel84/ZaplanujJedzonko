@@ -3,13 +3,12 @@ package pl.coderslab.web.app.plan;
 import pl.coderslab.dao.PlanDao;
 import pl.coderslab.dao.RecipeDAO;
 import pl.coderslab.model.Plan;
+import pl.coderslab.service.EditPlanService;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
 
 @WebServlet(name = "PlanEditServlet", value = "/app/plan/edit")
 public class PlanEditServlet extends HttpServlet {
@@ -25,12 +24,11 @@ public class PlanEditServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Plan plan = (new PlanDao()).getById(Integer.parseInt(request.getParameter("id")));
+        int id = Integer.parseInt(request.getParameter("id"));
+        Plan plan = (new PlanDao()).getById(id);
         plan.setName(request.getParameter("name"));
         plan.setDescription(request.getParameter("description"));
-        for (Map.Entry<String, String[]> e : request.getParameterMap().entrySet()){
-            System.out.println(e.getKey() + " : " + Arrays.toString(e.getValue()));
-        }
+        (new EditPlanService()).updatePlanDetails(id, request.getParameterMap());
         if((new PlanDao()).updatePlan(plan) > 0) response.sendRedirect("/app/plan/list");
         else response.getWriter().append("Something went wrong...");
     }

@@ -2,12 +2,7 @@ package pl.coderslab.dao;
 
 import pl.coderslab.model.Plan;
 import pl.coderslab.utils.DaoMethods;
-import pl.coderslab.utils.DbUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -59,18 +54,7 @@ public class PlanDao {
     }
 
     public int numberOfPlansByAdminId(int id) {
-        String sql = "select count(*) as count from plan where admin_id = ?";
-        int number = 0;
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next()) {
-                number = resultSet.getInt("count");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return number;
+
+        return METHODS.count("WHERE admin_id = ?", id);
     }
 }

@@ -18,6 +18,7 @@ public class DaoMethods <T>{
     private final String READ;
     private final String UPDATE;
     private final String DELETE;
+    private final String COUNT;
 
     public DaoMethods(Class<T> type, String table) throws NoSuchMethodException {
 
@@ -56,6 +57,8 @@ public class DaoMethods <T>{
         UPDATE = sb.toString();
 
         DELETE = "DELETE FROM " + table + " WHERE id = ?";
+
+        COUNT = "SELECT COUNT(id) AS 'count' FROM " + table + " ";
     }
 
     public int create(T entity){
@@ -124,6 +127,20 @@ public class DaoMethods <T>{
             PreparedStatement stmt = conn.prepareStatement(DELETE)) {
             stmt.setInt(1, id);
             return stmt.executeUpdate();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int count(String whereClause, Object... args){
+        try(Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(COUNT + whereClause)) {
+            for (int i = 0; i < args.length; i++) {
+                stmt.setObject(i + 1, args[i]);
+            }
+            ResultSet set = stmt.executeQuery();
+            if(set.next()) return set.getInt(1);
         }catch (Exception e){
             e.printStackTrace();
         }

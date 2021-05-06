@@ -2,9 +2,8 @@ package pl.coderslab.dao;
 
 import pl.coderslab.model.Recipe;
 import pl.coderslab.utils.DaoMethods;
-import pl.coderslab.utils.DbUtil;
 
-import java.sql.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,33 +54,12 @@ public class RecipeDAO {
 
     public int numberOfRecipesByAdminId(int id) {
 
-        int number = 0;
-        try (Connection connection = DbUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(NUMBER_OF_RECIPES_ADDED_BY_ADMIN);
-        ) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                number = resultSet.getInt("count");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return number;
+        return METHODS.count("WHERE admin_id = ?", id);
     }
 
     public int numberOfRecipes(){
-        String sql = "SELECT COUNT(id) AS 'count' FROM recipe";
 
-        try(Connection conn = DbUtil.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)){
-            ResultSet set = stmt.executeQuery();
-            if(set.next()) return set.getInt("count");
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return 0;
+        return METHODS.count("");
     }
 
     public List<Recipe> getWithLimit(int limit, int offset){

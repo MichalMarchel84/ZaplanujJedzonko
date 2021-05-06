@@ -11,8 +11,6 @@ import java.util.Optional;
 
 public class DaoMethods <T>{
 
-    private final Class TYPE;
-    private final String TABLE;
     private final Method[] GETTERS;
     private final String[] COLUMNS;
     private final EntityFactory<T> FACTORY;
@@ -22,8 +20,6 @@ public class DaoMethods <T>{
     private final String DELETE;
 
     public DaoMethods(Class<T> type, String table) throws NoSuchMethodException {
-        this.TYPE = type;
-        this.TABLE = table;
 
         String[] gNames = Arrays.stream(type.getDeclaredFields())
                 .map(n -> Conversions.fieldToGetter(n.getName()))
@@ -40,30 +36,26 @@ public class DaoMethods <T>{
         FACTORY = new EntityFactory<>(type);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO ");
-        sb.append(TABLE);
-        sb.append(" VALUES (NULL");
-        for (int i = 0; i < TYPE.getDeclaredFields().length - 1; i++) {
+        sb.append("INSERT INTO ").append(table).append(" VALUES (NULL");
+        for (int i = 0; i < type.getDeclaredFields().length - 1; i++) {
             sb.append(", ?");
         }
         sb.append(")");
         CREATE = sb.toString();
 
-        READ = "SELECT * FROM " + TABLE + " ";
+        READ = "SELECT * FROM " + table + " ";
 
         sb = new StringBuilder();
-        sb.append("UPDATE ");
-        sb.append(TABLE);
-        sb.append(" SET ");
+        sb.append("UPDATE ").append(table).append(" SET ");
         for (int i = 1; i < COLUMNS.length; i++) {
-            sb.append(COLUMNS[i] + " = ?");
+            sb.append(COLUMNS[i]).append(" = ?");
             if(i < COLUMNS.length - 1) sb.append(", ");
         }
-        sb.append(" WHERE " + COLUMNS[0] + " = ?");
+        sb.append(" WHERE ").append(COLUMNS[0]).append(" = ?");
 
         UPDATE = sb.toString();
 
-        DELETE = "DELETE FROM " + TABLE + " WHERE id = ?";
+        DELETE = "DELETE FROM " + table + " WHERE id = ?";
     }
 
     public int create(T entity){

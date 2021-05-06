@@ -11,10 +11,18 @@ import java.util.Arrays;
 
 @WebServlet(name = "PageRecipeDetailsServlet", value = "/details")
 public class PageRecipeDetailsServlet extends HttpServlet {
+
+    private final RecipeDAO recipeDAO;
+
+    public PageRecipeDetailsServlet() throws NoSuchMethodException {
+        recipeDAO = new RecipeDAO();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Recipe recipe = (new RecipeDAO()).read(Integer.parseInt(request.getParameter("id")));
-        request.setAttribute("recipe", recipe);
+
+        recipeDAO.read(Integer.parseInt(request.getParameter("id")))
+                .ifPresent(recipe -> request.setAttribute("recipe", recipe));
         String[] list = ((Recipe) request.getAttribute("recipe")).getIngredients().split("\n");
         request.setAttribute("ingredients", list);
         String origin = request.getQueryString().replaceFirst("id=[0-9]*", "");

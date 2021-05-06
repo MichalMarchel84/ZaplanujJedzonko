@@ -9,8 +9,14 @@ import java.util.stream.Collectors;
 
 public class EditPlanService {
 
+    private final RecipePlanDao dao;
+
+    public EditPlanService() throws NoSuchMethodException {
+        dao = new RecipePlanDao();
+    }
+
     public void updatePlanDetails(int planId, Map<String, String[]> params){
-        RecipePlanDao dao = new RecipePlanDao();
+
         Collection<RecipePlan> list = updateEntries(dao.getForPlan(planId), params);
         for (RecipePlan entry : list){
             dao.update(entry);
@@ -38,7 +44,6 @@ public class EditPlanService {
             }
         }
 
-        RecipePlanDao dao = new RecipePlanDao();
         for (Map.Entry<Integer, List<String[]>> entry : commands.entrySet()){
             RecipePlan meal = meals.get(entry.getKey());
             for (String[] command : entry.getValue()){

@@ -17,9 +17,14 @@ import java.util.List;
 public class PageRecipesServlet extends HttpServlet {
 
     private static final int resultsPerPage = 20;
+    private final RecipeDAO dao;
+
+    public PageRecipesServlet() throws NoSuchMethodException {
+        dao = new RecipeDAO();
+    }
 
     private List<Recipe> prepareList(HttpServletRequest request, int pageNo){
-        RecipeDAO dao = new RecipeDAO();
+
         int records = dao.numberOfRecipes();
         if(records > resultsPerPage){
             int pages = (int)(Math.ceil((double) records/resultsPerPage));

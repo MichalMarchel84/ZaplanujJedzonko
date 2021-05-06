@@ -2,21 +2,27 @@ package pl.coderslab.web.app;
 
 import pl.coderslab.dao.AdminDao;
 import pl.coderslab.model.Admin;
+import pl.coderslab.utils.Hashing;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet(name = "EditAdminServlet", value = "/app/edit-password")
 public class EditAdminPasswordServlet extends HttpServlet {
+
+    private final AdminDao adminDao;
+
+    public EditAdminPasswordServlet() throws NoSuchMethodException {
+        adminDao = new AdminDao();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
+
         request.setAttribute("component", "/app/admin/editadminpassword.jsp");
-        int id = ((Integer) session.getAttribute("adminId"));
-        AdminDao adminDao = new AdminDao();
-        Admin admin = adminDao.findById(id);
         getServletContext().getRequestDispatcher("/app/frame.jsp").forward(request, response);
     }
 
@@ -33,12 +39,11 @@ public class EditAdminPasswordServlet extends HttpServlet {
             request.setAttribute("component", "/app/admin/editadminpassword.jsp");
             getServletContext().getRequestDispatcher("/app/frame.jsp").forward(request, response);
         } else {
-            AdminDao adminDao = new AdminDao();
             int id = (Integer) session.getAttribute("adminId");
-            Admin admin = adminDao.findById(id);
-            admin.setPassword(password);
-            admin.hashAndSetPassword();
+            adminDao.findById(id).ifPresent(admin -> {
+            admin.setPassword(Hashing.hashPassword(password));
             adminDao.updateAdmin(admin);
+            });
             response.sendRedirect("/app/dashboard");
         }
 

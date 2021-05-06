@@ -10,9 +10,15 @@ import java.io.IOException;
 
 @WebServlet(name = "AddRecipeServlet", value = "/app/recipe/add")
 public class AddRecipeServlet extends HttpServlet {
+
+    private final RecipeDAO recipeDAO;
+
+    public AddRecipeServlet() throws NoSuchMethodException {
+        recipeDAO = new RecipeDAO();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
 
         request.setAttribute("component", "/app/recipe/add.jsp");
         getServletContext().getRequestDispatcher("/app/frame.jsp").forward(request, response);
@@ -24,7 +30,6 @@ public class AddRecipeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         Recipe recipe = new Recipe();
-        RecipeDAO recipeDAO = new RecipeDAO();
 
         recipe.setName(request.getParameter("name"));
         recipe.setDescription(request.getParameter("description"));

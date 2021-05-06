@@ -12,6 +12,13 @@ import java.io.IOException;
 
 @WebServlet(name = "addPlanServlet", value = "/app/plan/add")
 public class PlanAddServlet extends HttpServlet {
+
+    private final PlanDao planDao;
+
+    public PlanAddServlet() throws NoSuchMethodException {
+        planDao = new PlanDao();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("component", "/app/plan/add.jsp");
@@ -24,7 +31,7 @@ public class PlanAddServlet extends HttpServlet {
         plan.setAdminId((Integer) request.getSession().getAttribute("adminId"));
         plan.setName(request.getParameter("name"));
         plan.setDescription(request.getParameter("description"));
-        if((new PlanDao()).createPlan(plan) > 0) response.sendRedirect("/app/plan/list");
+        if(planDao.createPlan(plan) > 0) response.sendRedirect("/app/plan/list");
         else response.getWriter().append("Something went wrong...");
     }
 }

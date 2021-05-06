@@ -11,30 +11,28 @@ import java.util.List;
 
 public class EntityFactory<T> {
 
-    private final Class<T> TYPE;
     private final Constructor<T> CONSTRUCTOR;
     private final Method[] SETTERS;
 
     public EntityFactory(Class<T> type) throws NoSuchMethodException {
 
-        this.TYPE = type;
-        this.CONSTRUCTOR = TYPE.getConstructor();
+        this.CONSTRUCTOR = type.getConstructor();
 
-        Field[] fields = TYPE.getDeclaredFields();
+        Field[] fields = type.getDeclaredFields();
         SETTERS = new Method[fields.length];
         for (int i = 0; i < fields.length; i++) {
-            SETTERS[i] = TYPE.getMethod(Conversions.fieldToSetter(fields[i].getName()), fields[i].getType());
+            SETTERS[i] = type.getMethod(Conversions.fieldToSetter(fields[i].getName()), fields[i].getType());
         }
     }
 
-    public T getEntity(ResultSet set) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
+    public T getEntity(ResultSet set) throws InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
 
         T instance = null;
         if(set.next()) instance = build(set);
         return instance;
     }
 
-    public List<T> getAsList(ResultSet set) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public List<T> getAsList(ResultSet set) throws SQLException, InvocationTargetException, InstantiationException, IllegalAccessException {
         List<T> list = new ArrayList<>();
         while (set.next()){
             list.add(build(set));

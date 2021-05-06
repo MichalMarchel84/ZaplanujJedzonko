@@ -1,39 +1,25 @@
 package pl.coderslab.dao;
 
 import pl.coderslab.model.DayName;
-import pl.coderslab.utils.DbUtil;
-import pl.coderslab.utils.EntityFactory;
+import pl.coderslab.utils.DaoMethods;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DayNameDao {
 
-    private static final String FIND_ALL_BOOKS_QUERY = "SELECT * FROM day_name ORDER BY display_order ASC;";
+    private static List<DayName> list;
 
-    private EntityFactory<DayName> factory;
-
-    public DayNameDao() {
+    static {
         try {
-            factory  = new EntityFactory<>(DayName.class);
-        }catch (NoSuchMethodException e){
+            list = (new DaoMethods<>(DayName.class, "day_name")).readList("");
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            list = new ArrayList<>();
         }
     }
 
     public List<DayName> findAll() {
-        List<DayName> dayNames = new ArrayList<>();
-        try (Connection connection = DbUtil.getConnection();
-            PreparedStatement statement = connection.prepareStatement(FIND_ALL_BOOKS_QUERY)) {
-            ResultSet resultSet = statement.executeQuery();
-            dayNames = factory.getAsList(resultSet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dayNames;
-
+        return list;
     }
 }

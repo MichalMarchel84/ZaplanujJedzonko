@@ -12,13 +12,19 @@ import java.util.List;
 
 @WebServlet(name = "RecipeServlet", value = "/app/recipe/list")
 public class RecipeServlet extends HttpServlet {
+
+    private final RecipeDAO recipeDAO;
+
+    public RecipeServlet() throws NoSuchMethodException {
+        recipeDAO = new RecipeDAO();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
         request.setAttribute("component", "/app/recipe/recipelist.jsp");
 
-        RecipeDAO recipeDAO = new RecipeDAO();
         List<Recipe> recipes = recipeDAO.findAllByAdmin((Integer) session.getAttribute("adminId"));
         recipes.sort(Comparator.comparing(Recipe::getCreated).reversed());
         request.setAttribute("recipes", recipes);

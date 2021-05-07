@@ -548,7 +548,11 @@ margin: 0 auto !important;
   width: 3em;
 }
 
-.meal-width{
-  border: 3px solid red;
-  max-width: 500px;
+/*------------------------------*/
+/*---- Add plan ----*/
+/*------------------------------*/
+
+.list-margin{
+  margin-top: 3vh;
+  margin-left: 10vw;
 }

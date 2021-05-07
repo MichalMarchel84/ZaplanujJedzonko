@@ -1,5 +1,6 @@
 package pl.coderslab.web.app.plan;
 
+import pl.coderslab.dao.DayNameDao;
 import pl.coderslab.dao.PlanDao;
 import pl.coderslab.model.Plan;
 
@@ -21,6 +22,8 @@ public class PlanAddServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        request.setAttribute("days", (new DayNameDao()).findAll());
         request.setAttribute("component", "/app/plan/add.jsp");
         getServletContext().getRequestDispatcher("/app/frame.jsp").forward(request, response);
     }

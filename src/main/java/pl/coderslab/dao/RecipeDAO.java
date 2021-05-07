@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public class RecipeDAO {
 
-    private static final String NUMBER_OF_RECIPES_ADDED_BY_ADMIN = "select count(*) as count from recipe where admin_id=?;";
-
     private final DaoMethods<Recipe> METHODS;
 
     public RecipeDAO() throws NoSuchMethodException {

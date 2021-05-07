@@ -3,6 +3,7 @@ package pl.coderslab.web.app;
 import pl.coderslab.dao.PlanDao;
 import pl.coderslab.dao.RecipeDAO;
 import pl.coderslab.model.Plan;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,13 +17,8 @@ import java.util.Optional;
 @WebServlet("/app/dashboard")
 public class DashboardServlet extends HttpServlet {
 
-    private final PlanDao planDao;
-    private final RecipeDAO recipeDAO;
-
-    public DashboardServlet() throws NoSuchMethodException {
-        planDao = new PlanDao();
-        recipeDAO = new RecipeDAO();
-    }
+    private final PlanDao planDao = DbUtil.getPlanDao();
+    private final RecipeDAO recipeDAO = DbUtil.getRecipeDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

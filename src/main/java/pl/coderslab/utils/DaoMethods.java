@@ -77,6 +77,24 @@ public class DaoMethods <T>{
         return 0;
     }
 
+    public void createMultiple(List<T> entities){
+        try(Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(CREATE)) {
+            conn.setAutoCommit(false);
+            for(T entity : entities) {
+                for (int i = 1; i < GETTERS.length; i++) {
+                    stmt.setObject(i, GETTERS[i].invoke(entity));
+                }
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+            conn.commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public Optional<T> readSingle(String whereClause, Object... args){
         String sql = READ + whereClause;
         try(Connection conn = DbUtil.getConnection();
@@ -122,6 +140,24 @@ public class DaoMethods <T>{
         return 0;
     }
 
+    public void updateMultiple(List<T> entities){
+        try(Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(UPDATE)) {
+            conn.setAutoCommit(false);
+            for (T entity : entities) {
+                for (int i = 1; i < GETTERS.length; i++) {
+                    stmt.setObject(i, GETTERS[i].invoke(entity));
+                }
+                stmt.setObject(COLUMNS.length, GETTERS[0].invoke(entity));
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+            conn.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public int delete(int id){
         try(Connection conn = DbUtil.getConnection();
             PreparedStatement stmt = conn.prepareStatement(DELETE)) {
@@ -131,6 +167,21 @@ public class DaoMethods <T>{
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public void deleteMultiple(List<Integer> list){
+        try(Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(DELETE)) {
+            conn.setAutoCommit(false);
+            for (int id : list) {
+                stmt.setInt(1, id);
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+            conn.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public int count(String whereClause, Object... args){

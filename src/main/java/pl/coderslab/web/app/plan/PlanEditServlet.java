@@ -2,26 +2,22 @@ package pl.coderslab.web.app.plan;
 
 import pl.coderslab.dao.PlanDao;
 import pl.coderslab.dao.RecipeDAO;
-import pl.coderslab.model.Plan;
 import pl.coderslab.service.EditPlanService;
+import pl.coderslab.utils.DbUtil;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "PlanEditServlet", value = "/app/plan/edit")
 public class PlanEditServlet extends HttpServlet {
 
-    private final PlanDao planDao;
-    private final RecipeDAO recipeDAO;
-    private final EditPlanService service;
-
-    public PlanEditServlet() throws NoSuchMethodException {
-        planDao = new PlanDao();
-        recipeDAO = new RecipeDAO();
-        service = new EditPlanService();
-    }
+    private final PlanDao planDao = DbUtil.getPlanDao();
+    private final RecipeDAO recipeDAO = DbUtil.getRecipeDAO();
+    private final EditPlanService service = new EditPlanService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

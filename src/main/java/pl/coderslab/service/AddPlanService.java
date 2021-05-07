@@ -7,6 +7,7 @@ import pl.coderslab.model.Recipe;
 import pl.coderslab.model.RecipePlan;
 import pl.coderslab.utils.DbUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public class AddPlanService {
                 .toArray(Integer[]::new);
 
         List<Recipe> recipes = recipeDAO.findAllByAdmin(plan.getAdminId());
+        List<RecipePlan> list = new ArrayList<>();
         for (int dayId : days) {
             for (int no : mealNo) {
                 RecipePlan entry = new RecipePlan();
@@ -40,8 +42,9 @@ public class AddPlanService {
                 entry.setMealName(meals.get(no));
                 entry.setPlanId(plan.getId());
                 entry.setRecipeId(recipes.get(0).getId());
-                recipePlanDao.create(entry);
+                list.add(entry);
             }
         }
+        recipePlanDao.createMultiple(list);
     }
 }

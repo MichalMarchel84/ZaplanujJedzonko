@@ -30,13 +30,28 @@ public class RecipePlanDao {
         return METHODS.create(entry);
     }
 
+    public void createMultiple(List<RecipePlan> list){
+
+        METHODS.createMultiple(list);
+    }
+
     public int update(RecipePlan entry){
 
         return METHODS.update(entry);
     }
 
+    public void updateMultiple(List<RecipePlan> list){
+
+        METHODS.updateMultiple(list);
+    }
+
     public int delete(int id){
 
         return METHODS.delete(id);
+    }
+
+    public void deleteMultiple(List<Integer> list){
+
+        METHODS.deleteMultiple(list);
     }
 }

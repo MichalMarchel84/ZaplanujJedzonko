@@ -1,6 +1,7 @@
 package pl.coderslab.web.app.recipe;
 
 import pl.coderslab.dao.RecipeDAO;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -10,11 +11,7 @@ import java.io.IOException;
 @WebServlet(name = "DeleteRecipeServlet", value = "/app/recipe/delete")
 public class DeleteRecipeServlet extends HttpServlet {
 
-    private final RecipeDAO recipeDAO;
-
-    public DeleteRecipeServlet() throws NoSuchMethodException {
-        recipeDAO = new RecipeDAO();
-    }
+    private final RecipeDAO recipeDAO = DbUtil.getRecipeDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

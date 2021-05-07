@@ -1,7 +1,7 @@
 package pl.coderslab.web.app.recipe;
 
 import pl.coderslab.dao.RecipePlanDao;
-import pl.coderslab.model.Meal;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +13,7 @@ import java.io.IOException;
 @WebServlet("/app/recipe/deleteFromPlan")
 public class RecipeDeleteFromPlanServlet extends HttpServlet {
 
-    private final RecipePlanDao dao;
-
-    public RecipeDeleteFromPlanServlet() throws NoSuchMethodException {
-        dao = new RecipePlanDao();
-    }
-
+    private final RecipePlanDao dao = DbUtil.getRecipePlanDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,11 +28,11 @@ public class RecipeDeleteFromPlanServlet extends HttpServlet {
             req.setAttribute("component", "/app/question.jsp");
             getServletContext().getRequestDispatcher("/app/frame.jsp").forward(req, resp);
 
-        }else if (req.getParameter("confirm").equals("1")) {
+        } else if (req.getParameter("confirm").equals("1")) {
 
             int id = Integer.parseInt(req.getParameter("id"));
             dao.delete(id);
-            resp.sendRedirect("/app/plan/details?id=" + req.getParameter("plan") );
+            resp.sendRedirect("/app/plan/details?id=" + req.getParameter("plan"));
         }
     }
 }

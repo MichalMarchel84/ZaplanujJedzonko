@@ -2,6 +2,7 @@ package pl.coderslab.web.app.recipe;
 
 import pl.coderslab.dao.RecipeDAO;
 import pl.coderslab.model.Recipe;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -11,11 +12,7 @@ import java.io.IOException;
 @WebServlet(name = "AddRecipeServlet", value = "/app/recipe/add")
 public class AddRecipeServlet extends HttpServlet {
 
-    private final RecipeDAO recipeDAO;
-
-    public AddRecipeServlet() throws NoSuchMethodException {
-        recipeDAO = new RecipeDAO();
-    }
+    private final RecipeDAO recipeDAO = DbUtil.getRecipeDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

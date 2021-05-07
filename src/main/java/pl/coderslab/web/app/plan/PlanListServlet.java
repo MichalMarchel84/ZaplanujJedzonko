@@ -2,6 +2,7 @@ package pl.coderslab.web.app.plan;
 
 import pl.coderslab.dao.PlanDao;
 import pl.coderslab.model.Plan;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -13,11 +14,8 @@ import java.util.List;
 @WebServlet(name = "ListPlanServlet", value = "/app/plan/list")
 public class PlanListServlet extends HttpServlet {
 
-    private final PlanDao planDao;
+    private final PlanDao planDao = DbUtil.getPlanDao();
 
-    public PlanListServlet() throws NoSuchMethodException {
-        planDao = new PlanDao();
-    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();

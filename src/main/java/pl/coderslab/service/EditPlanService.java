@@ -2,6 +2,7 @@ package pl.coderslab.service;
 
 import pl.coderslab.dao.RecipePlanDao;
 import pl.coderslab.model.RecipePlan;
+import pl.coderslab.utils.DbUtil;
 
 import java.util.*;
 import java.util.function.Function;
@@ -9,21 +10,14 @@ import java.util.stream.Collectors;
 
 public class EditPlanService {
 
-    private final RecipePlanDao dao;
-
-    public EditPlanService() throws NoSuchMethodException {
-        dao = new RecipePlanDao();
-    }
+    private final RecipePlanDao dao = DbUtil.getRecipePlanDao();
 
     public void updatePlanDetails(int planId, Map<String, String[]> params){
 
-        Collection<RecipePlan> list = updateEntries(dao.getForPlan(planId), params);
-        for (RecipePlan entry : list){
-            dao.update(entry);
-        }
+        dao.updateMultiple(updateEntries(dao.getForPlan(planId), params));
     }
 
-    private Collection<RecipePlan> updateEntries(List<RecipePlan> list, Map<String, String[]> params){
+    private List<RecipePlan> updateEntries(List<RecipePlan> list, Map<String, String[]> params){
 
         Map<Integer, RecipePlan> meals = list.stream().collect(Collectors.toMap(n -> n.getId(), Function.identity()));
 
@@ -44,19 +38,21 @@ public class EditPlanService {
             }
         }
 
+        List<Integer> forDeletion = new ArrayList<>();
         for (Map.Entry<Integer, List<String[]>> entry : commands.entrySet()){
             RecipePlan meal = meals.get(entry.getKey());
             for (String[] command : entry.getValue()){
                 if(command[0].equals("delete")){
                     meals.remove(meal.getId());
-                    dao.delete(meal.getId());
+                    forDeletion.add(meal.getId());
                     break;
                 }
                 execute(command, meal);
             }
         }
+        dao.deleteMultiple(forDeletion);
 
-        return meals.values();
+        return new ArrayList<>(meals.values());
     }
 
     private void execute(String[] command, RecipePlan entry){

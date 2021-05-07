@@ -2,22 +2,21 @@ package pl.coderslab.web.app;
 
 import pl.coderslab.dao.AdminDao;
 import pl.coderslab.model.Admin;
+import pl.coderslab.utils.DbUtil;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @WebServlet(name = "EditUserDataServlet", value = "/app/edit-admin-data")
 public class EditAdminDataServlet extends HttpServlet {
 
-    private final AdminDao adminDao;
-
-    public EditAdminDataServlet() throws NoSuchMethodException {
-        adminDao = new AdminDao();
-    }
+    private final AdminDao adminDao = DbUtil.getAdminDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -8,6 +8,7 @@ import pl.coderslab.model.DayName;
 import pl.coderslab.model.Plan;
 import pl.coderslab.model.Recipe;
 import pl.coderslab.model.RecipePlan;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,15 +23,9 @@ import java.util.List;
 @WebServlet("/app/recipe/plan/add")
 public class AddRecipeToPlan extends HttpServlet {
 
-    private final PlanDao planDao;
-    private final RecipeDAO recipeDAO;
-    private final RecipePlanDao recipePlanDao;
-
-    public AddRecipeToPlan() throws NoSuchMethodException {
-        planDao = new PlanDao();
-        recipeDAO = new RecipeDAO();
-        recipePlanDao = new RecipePlanDao();
-    }
+    private final PlanDao planDao = DbUtil.getPlanDao();
+    private final RecipeDAO recipeDAO = DbUtil.getRecipeDAO();
+    private final RecipePlanDao recipePlanDao = DbUtil.getRecipePlanDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

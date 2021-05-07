@@ -12,7 +12,7 @@ public class DayNameDao {
 
     static {
         try {
-            list = (new DaoMethods<>(DayName.class, "day_name")).readList("");
+            list = (new DaoMethods<>(DayName.class, "day_name")).readList("ORDER BY display_order");
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
             list = new ArrayList<>();

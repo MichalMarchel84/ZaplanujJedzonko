@@ -2,6 +2,7 @@ package pl.coderslab.web.page;
 
 import pl.coderslab.dao.AdminDao;
 import pl.coderslab.model.Admin;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,11 +15,7 @@ import java.util.Optional;
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {
 
-    private final AdminDao adminDao;
-
-    public RegistrationServlet() throws NoSuchMethodException {
-        adminDao = new AdminDao();
-    }
+    private final AdminDao adminDao = DbUtil.getAdminDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -25,6 +25,11 @@ public class RecipePlanDao {
         return METHODS.readList("WHERE plan_id = ?", id);
     }
 
+    public List<RecipePlan> getForRecipe(int id){
+
+        return METHODS.readList("WHERE recipe_id = ?", id);
+    }
+
     public int create(RecipePlan entry){
 
         return METHODS.create(entry);

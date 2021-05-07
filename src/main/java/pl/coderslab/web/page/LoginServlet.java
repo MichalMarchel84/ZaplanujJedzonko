@@ -1,8 +1,8 @@
 package pl.coderslab.web.page;
 
-import org.mindrot.jbcrypt.BCrypt;
 import pl.coderslab.dao.AdminDao;
 import pl.coderslab.model.Admin;
+import pl.coderslab.utils.DbUtil;
 import pl.coderslab.utils.Hashing;
 
 import javax.servlet.ServletException;
@@ -17,11 +17,7 @@ import java.util.Optional;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    private final AdminDao adminDao;
-
-    public LoginServlet() throws NoSuchMethodException {
-        adminDao = new AdminDao();
-    }
+    private final AdminDao adminDao = DbUtil.getAdminDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

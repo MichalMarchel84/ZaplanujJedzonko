@@ -2,21 +2,19 @@ package pl.coderslab.web.page;
 
 import pl.coderslab.dao.RecipeDAO;
 import pl.coderslab.model.Recipe;
+import pl.coderslab.utils.DbUtil;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 @WebServlet(name = "PageRecipeDetailsServlet", value = "/details")
 public class PageRecipeDetailsServlet extends HttpServlet {
 
-    private final RecipeDAO recipeDAO;
-
-    public PageRecipeDetailsServlet() throws NoSuchMethodException {
-        recipeDAO = new RecipeDAO();
-    }
+    private final RecipeDAO recipeDAO = DbUtil.getRecipeDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

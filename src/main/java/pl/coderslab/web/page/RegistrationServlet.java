@@ -9,9 +9,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {
+
+    private final AdminDao adminDao;
+
+    public RegistrationServlet() throws NoSuchMethodException {
+        adminDao = new AdminDao();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -24,7 +31,7 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Admin admin = new Admin();
-        AdminDao adminDao = new AdminDao();
+
         req.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html;charset=UTF-8");
 
@@ -40,9 +47,9 @@ public class RegistrationServlet extends HttpServlet {
         admin.setPassword(pass);
         admin.setEnable(1);
 
-        Admin checkAdmin = adminDao.findByEmail(email);
+        Optional<Admin> checkAdmin = adminDao.findByEmail(email);
 
-        if (checkAdmin.getId() > 0) {
+        if (checkAdmin.isPresent()) {
 
             String errorMsg = "Użytkownik o podanym mailu już istnieje";
             req.setAttribute("errorMsg", errorMsg);

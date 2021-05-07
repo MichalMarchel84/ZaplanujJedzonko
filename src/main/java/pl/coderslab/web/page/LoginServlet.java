@@ -3,6 +3,7 @@ package pl.coderslab.web.page;
 import org.mindrot.jbcrypt.BCrypt;
 import pl.coderslab.dao.AdminDao;
 import pl.coderslab.model.Admin;
+import pl.coderslab.utils.Hashing;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,9 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+
+    private final AdminDao adminDao;
+
+    public LoginServlet() throws NoSuchMethodException {
+        adminDao = new AdminDao();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,9 +37,7 @@ public class LoginServlet extends HttpServlet {
         String email = req.getParameter("email");
         String pass = req.getParameter("password");
 
-        AdminDao adminDao = new AdminDao();
-
-        Admin checkAdmin = adminDao.findByEmail(email);
+        Optional<Admin> checkAdmin = adminDao.findByEmail(email);
 
         if (email.equals("")) {
 
@@ -39,19 +45,19 @@ public class LoginServlet extends HttpServlet {
             req.setAttribute("errorMsg", errorMsg);
             getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
 
-        } else if (checkAdmin.getPassword() == null) {
+        } else if (!checkAdmin.isPresent()) {
 
             String errorMsg = "Użytkownik nie istnieje. Spróbuj ponownie";
             req.setAttribute("errorMsg1", errorMsg);
             getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
 
-        } else if (!BCrypt.checkpw(pass, checkAdmin.getPassword())) {
+        } else if (!Hashing.checkPassword(pass, checkAdmin.get().getPassword())) {
 
             String errorMsg = "Niepoprawne hasło. Spróbuj ponownie";
             req.setAttribute("errorMsg2", errorMsg);
             getServletContext().getRequestDispatcher("/login.jsp").forward(req, resp);
 
-        } else if (checkAdmin.getEnable() == 0) {
+        } else if (checkAdmin.get().getEnable() == 0) {
 
             String errorMsg = "Administrator zablokował Twoje konto.";
             req.setAttribute("errorMsg", errorMsg);
@@ -61,12 +67,13 @@ public class LoginServlet extends HttpServlet {
         else {
 
             HttpSession session = req.getSession();
-            session.setAttribute("adminId", checkAdmin.getId());
-            session.setAttribute("adminName", checkAdmin.getFirstName());
-            session.setAttribute("enable", checkAdmin.getEnable());
-            if (checkAdmin.getSuperadmin()==1)
+            Admin admin = checkAdmin.get();
+            session.setAttribute("adminId", admin.getId());
+            session.setAttribute("adminName", admin.getFirstName());
+            session.setAttribute("enable", admin.getEnable());
+            if (admin.getSuperadmin()==1)
             {
-                session.setAttribute("superAdmin", checkAdmin.getSuperadmin());
+                session.setAttribute("superAdmin", admin.getSuperadmin());
             }
             resp.sendRedirect("/app/dashboard");
         }

@@ -18,7 +18,11 @@ public class Search<T> {
     public Search(Class<T> type, String table) {
         this.type = type;
         this.table = table;
-        this.factory = new EntityFactory<>(type);
+        try {
+            this.factory = new EntityFactory<>(type);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<T> inColumns(String phrase, String[] colNames, boolean sortByHitCount) {
@@ -61,15 +65,13 @@ public class Search<T> {
         return list;
     }
 
-    private String columnToGetter(String colName) {
-        return "get" + CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, colName);
-    }
+
 
     private int getHitsInRow(T obj, String[] colNames, String[] tokens) {
         int n = 0;
         try {
             for (String colName : colNames) {
-                String val = (String) type.getMethod(columnToGetter(colName)).invoke(obj);
+                String val = (String) type.getMethod(Conversions.columnToGetter(colName)).invoke(obj);
                 for (String token : tokens) {
                     Pattern pattern = Pattern.compile(token, Pattern.CASE_INSENSITIVE);
                     Matcher matcher = pattern.matcher(val);

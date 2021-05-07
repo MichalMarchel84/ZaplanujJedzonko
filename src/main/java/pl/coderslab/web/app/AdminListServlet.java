@@ -16,10 +16,17 @@ import java.util.TreeMap;
 
 @WebServlet(name = "AdminListServlet", value = "/app/super-admin-users")
 public class AdminListServlet extends HttpServlet {
+
+    private final AdminDao adminDao;
+
+    public AdminListServlet() throws NoSuchMethodException {
+        adminDao = new AdminDao();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        AdminDao adminDao = new AdminDao();
+
         List<Admin> admins;
 
         if(request.getParameterMap().isEmpty()) {

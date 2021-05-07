@@ -1,7 +1,5 @@
 package pl.coderslab.model;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 public class Admin implements Comparable<Admin> {
 
     private int id;
@@ -67,11 +65,6 @@ public class Admin implements Comparable<Admin> {
         this.password = password;
     }
     
-    public String hashAndSetPassword () {
-        this.password = hashPassword(password);
-        return password;
-    }
-
     public int getSuperadmin() {
         return superadmin;
     }
@@ -83,10 +76,6 @@ public class Admin implements Comparable<Admin> {
     @Override
     public String toString(){
         return id + " " + firstName + " " + lastName + " " + email + " " + password + " " + superadmin + "" + enable;
-    }
-    public String hashPassword(String password) {
-
-        return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
     public void setEnable(int enabled) {

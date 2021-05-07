@@ -12,12 +12,25 @@ import java.io.IOException;
 
 @WebServlet(name = "PlanEditServlet", value = "/app/plan/edit")
 public class PlanEditServlet extends HttpServlet {
+
+    private final PlanDao planDao;
+    private final RecipeDAO recipeDAO;
+    private final EditPlanService service;
+
+    public PlanEditServlet() throws NoSuchMethodException {
+        planDao = new PlanDao();
+        recipeDAO = new RecipeDAO();
+        service = new EditPlanService();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Plan plan = (new PlanDao()).getById(Integer.parseInt(request.getParameter("id")));
-        request.setAttribute("plan", plan);
-        request.setAttribute("details", plan.getDetails());
-        request.setAttribute("recipes", (new RecipeDAO()).findAllByAdmin((Integer)request.getSession().getAttribute("adminId")));
+
+        planDao.getById(Integer.parseInt(request.getParameter("id"))).ifPresent(plan -> {
+            request.setAttribute("plan", plan);
+            request.setAttribute("details", plan.getDetails());
+            request.setAttribute("recipes", recipeDAO.findAllByAdmin((Integer) request.getSession().getAttribute("adminId")));
+        });
         request.setAttribute("component", "/app/plan/edit.jsp");
         getServletContext().getRequestDispatcher("/app/frame.jsp").forward(request, response);
     }
@@ -25,11 +38,12 @@ public class PlanEditServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Plan plan = (new PlanDao()).getById(id);
-        plan.setName(request.getParameter("name"));
-        plan.setDescription(request.getParameter("description"));
-        (new EditPlanService()).updatePlanDetails(id, request.getParameterMap());
-        if((new PlanDao()).updatePlan(plan) > 0) response.sendRedirect("/app/plan/list");
-        else response.getWriter().append("Something went wrong...");
+        planDao.getById(id).ifPresent(plan -> {
+            plan.setName(request.getParameter("name"));
+            plan.setDescription(request.getParameter("description"));
+            service.updatePlanDetails(id, request.getParameterMap());
+            planDao.updatePlan(plan);
+        });
+        response.sendRedirect("/app/plan/list");
     }
 }

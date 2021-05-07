@@ -13,6 +13,13 @@ import java.io.IOException;
 @WebServlet("/app/recipe/deleteFromPlan")
 public class RecipeDeleteFromPlanServlet extends HttpServlet {
 
+    private final RecipePlanDao dao;
+
+    public RecipeDeleteFromPlanServlet() throws NoSuchMethodException {
+        dao = new RecipePlanDao();
+    }
+
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -29,7 +36,7 @@ public class RecipeDeleteFromPlanServlet extends HttpServlet {
         }else if (req.getParameter("confirm").equals("1")) {
 
             int id = Integer.parseInt(req.getParameter("id"));
-            (new RecipePlanDao()).delete(id);
+            dao.delete(id);
             resp.sendRedirect("/app/plan/details?id=" + req.getParameter("plan") );
         }
     }

@@ -76,18 +76,6 @@ public class Meal implements Comparable<Meal>{
         return map;
     }
 
-    public static void remove(int id){
-
-        String sql = "DELETE FROM recipe_plan WHERE id = ?";
-        try (Connection conn = DbUtil.getConnection();
-            PreparedStatement stm = conn.prepareStatement(sql)) {
-            stm.setInt(1, id);
-            stm.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void setId(int id) {
         this.id = id;
     }

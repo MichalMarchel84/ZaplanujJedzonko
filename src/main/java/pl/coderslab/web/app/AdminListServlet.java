@@ -2,6 +2,7 @@ package pl.coderslab.web.app;
 
 import pl.coderslab.dao.AdminDao;
 import pl.coderslab.model.Admin;
+import pl.coderslab.utils.DbUtil;
 import pl.coderslab.utils.Search;
 
 
@@ -16,10 +17,12 @@ import java.util.TreeMap;
 
 @WebServlet(name = "AdminListServlet", value = "/app/super-admin-users")
 public class AdminListServlet extends HttpServlet {
+
+    private final AdminDao adminDao = DbUtil.getAdminDao();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        AdminDao adminDao = new AdminDao();
         List<Admin> admins;
 
         if(request.getParameterMap().isEmpty()) {

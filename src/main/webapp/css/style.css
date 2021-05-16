@@ -539,3 +539,20 @@ margin: 0 auto !important;
 .page-width{
   max-width: 100vw;
 }
+
+/*------------------------------*/
+/*---- Edit plan ----*/
+/*------------------------------*/
+
+.meal-order{
+  width: 3em;
+}
+
+/*------------------------------*/
+/*---- Add plan ----*/
+/*------------------------------*/
+
+.list-margin{
+  margin-top: 3vh;
+  margin-left: 10vw;
+}

@@ -27,7 +27,7 @@ public class DbContentGenerator {
     private List<Recipe> recipes = getRecipes();
     private List<Admin> admins;
 
-    public void populate(int userLimit) {
+    public void populate(int userLimit) throws NoSuchMethodException {
         DbUtil.setDataSource(getDataSource());
         admins = generateAdmins(userLimit);
         Random random = new Random();
@@ -65,7 +65,7 @@ public class DbContentGenerator {
         System.out.println("Finished populating");
     }
 
-    private List<Admin> generateAdmins(int limit) {
+    private List<Admin> generateAdmins(int limit) throws NoSuchMethodException {
         System.out.print("Generating admins");
         List<String[]> names = getUserNames();
         List<Admin> list = new ArrayList<>();
@@ -76,8 +76,8 @@ public class DbContentGenerator {
             if (counter > limit) break;
             Admin admin = new Admin();
             admin.setEmail(name[0].toLowerCase() + "." + name[1].toLowerCase() + "@gmail.com");
-            Admin checkAdmin = dao.findByEmail(admin.getEmail());
-            if (checkAdmin.getId() > 0) admin = checkAdmin;
+            Optional<Admin> checkAdmin = dao.findByEmail(admin.getEmail());
+            if (checkAdmin.isPresent()) admin = checkAdmin.get();
             else {
                 admin.setFirstName(name[0]);
                 admin.setLastName(name[1]);
@@ -189,7 +189,7 @@ public class DbContentGenerator {
         return source;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchMethodException {
         DbContentGenerator gen = new DbContentGenerator();
         gen.populate(10);
     }

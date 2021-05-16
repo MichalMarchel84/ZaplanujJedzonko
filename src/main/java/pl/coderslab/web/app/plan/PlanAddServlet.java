@@ -1,7 +1,10 @@
 package pl.coderslab.web.app.plan;
 
+import pl.coderslab.dao.DayNameDao;
 import pl.coderslab.dao.PlanDao;
 import pl.coderslab.model.Plan;
+import pl.coderslab.service.AddPlanService;
+import pl.coderslab.utils.DbUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,8 +15,15 @@ import java.io.IOException;
 
 @WebServlet(name = "addPlanServlet", value = "/app/plan/add")
 public class PlanAddServlet extends HttpServlet {
+
+    private final PlanDao planDao = DbUtil.getPlanDao();
+    private final AddPlanService service = new AddPlanService();
+    private final DayNameDao dayNameDao = DbUtil.getDayNameDao();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        request.setAttribute("days", dayNameDao.findAll());
         request.setAttribute("component", "/app/plan/add.jsp");
         getServletContext().getRequestDispatcher("/app/frame.jsp").forward(request, response);
     }
@@ -24,7 +34,11 @@ public class PlanAddServlet extends HttpServlet {
         plan.setAdminId((Integer) request.getSession().getAttribute("adminId"));
         plan.setName(request.getParameter("name"));
         plan.setDescription(request.getParameter("description"));
-        if((new PlanDao()).createPlan(plan) > 0) response.sendRedirect("/app/plan/list");
-        else response.getWriter().append("Something went wrong...");
+        plan.setId(planDao.createPlan(plan));
+        if(request.getParameter("useTemplate") != null){
+            service.createSchedule(request.getParameterMap(), plan);
+            response.sendRedirect("/app/plan/edit?id=" + plan.getId());
+        }
+        else response.sendRedirect("/app/plan/list");
     }
 }
